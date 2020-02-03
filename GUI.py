@@ -12,8 +12,9 @@ class Window(tk.Frame):
         self.init_window()
         self.outputPath = os.path.dirname(os.path.realpath(__file__))
 
-        self.panel = None
         self.cap = cv2.VideoCapture(0)
+        self.panel = None
+
         # self.cap = cv2.VideoCapture('rtsp://admin:admin@192.254.30.144')
 
         self.lmain = tk.Label(root)
@@ -109,11 +110,14 @@ class Window(tk.Frame):
             self.laserButton.configure(text="OFF")
 
     def client_exit(self):
-        exit()
+        self.stopEvent.set()
+        cv2.VideoCapture(0).stop()
+        self.master.quit()
+        #exit()
 
     def start_Webcam(self):
         self.stopEvent = threading.Event()
-        self.thread = threading.Thread(targe=self.videoLoop(), args=())
+        self.thread = threading.Thread(target=self.videoLoop(), args=())
         self.thread.start()
 
 
@@ -121,7 +125,7 @@ class Window(tk.Frame):
         try:
             while not self.stopEvent.is_set():
 
-                check, self.frame = self.cap.read()
+                check, self.frame = cv2.VideoCapture(0).read()
 
                 self.frame = cv2.resize(self.frame, None, fx=0.4, fy=0.4)
                 cv2image = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGBA)
