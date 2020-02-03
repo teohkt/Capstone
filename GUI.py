@@ -12,9 +12,8 @@ class Window(tk.Frame):
         self.init_window()
         self.outputPath = os.path.dirname(os.path.realpath(__file__))
 
-        self.cap = cv2.VideoCapture(0)
         self.panel = None
-
+        self.cap = cv2.VideoCapture(0)
         # self.cap = cv2.VideoCapture('rtsp://admin:admin@192.254.30.144')
 
         self.lmain = tk.Label(root)
@@ -23,11 +22,7 @@ class Window(tk.Frame):
         self.frame = None
         self.thread = None
         self.stopEvent = None
-        # self.videoLoop()
 
-        #self.stopEvent = threading.Event()
-        #self.thread = threading.Thread(targe=self.videoLoop(), args=())
-        #self.thread.start()
 
     def init_window(self):
         self.master.title("Inspection Camera Inferface")
@@ -122,6 +117,13 @@ class Window(tk.Frame):
 
 
     def videoLoop(self):
+
+        self.panel = None
+        self.cap = cv2.VideoCapture(0)
+        # self.cap = cv2.VideoCapture('rtsp://admin:admin@192.254.30.144')
+        self.lmain = tk.Label(root)
+        self.lmain.place(x=500, y=200)
+
         try:
             while not self.stopEvent.is_set():
 
@@ -129,6 +131,7 @@ class Window(tk.Frame):
 
                 self.frame = cv2.resize(self.frame, None, fx=0.4, fy=0.4)
                 cv2image = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGBA)
+
                 img = Image.fromarray(cv2image)
                 imgtk = ImageTk.PhotoImage(image=img)
 
