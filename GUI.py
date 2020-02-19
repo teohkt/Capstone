@@ -14,7 +14,7 @@ class Window(tk.Frame):
 
         self.panel = None
         self.cap = cv2.VideoCapture(0)
-        # self.cap = cv2.VideoCapture('rtsp://admin:admin@192.254.30.144')
+        # self.cap = cv2.VideoCapture('rtsp://admin:admin@169.254.210.163:554/videoinput_1:0/h264_1/media.stm')
 
         self.lmain = tk.Label(root)
         self.lmain.place(x=500, y=200)
@@ -120,7 +120,7 @@ class Window(tk.Frame):
 
         self.panel = None
         self.cap = cv2.VideoCapture(0)
-        # self.cap = cv2.VideoCapture('rtsp://admin:admin@192.254.30.144')
+        # self.cap = cv2.VideoCapture('rtsp://admin:admin@169.254.210.163:554/videoinput_1:0/h264_1/media.stm')
         self.lmain = tk.Label(root)
         self.lmain.place(x=500, y=200)
 
