@@ -1,0 +1,88 @@
+#define panR  3
+#define panL  4
+
+#define stepPin 7
+#define dirPin 6
+
+int lastValue;
+
+int command;
+
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(panR,OUTPUT); 
+  pinMode(panL,OUTPUT);
+
+  pinMode(stepPin,OUTPUT);
+  pinMode(dirPin,OUTPUT);
+  digitalWrite(dirPin,HIGH);
+  
+  Serial.begin(9600);
+
+  lastValue = 0;
+
+  //j = 106
+  //k = 107
+  //l=108
+  //i=105
+  
+}
+
+void loop() {
+
+
+    command = Serial.read();
+    
+    if(command == 106){   //j=106, left = 37
+        digitalWrite(panR, 1);
+        digitalWrite(panL, 0);
+        delay(50);
+        digitalWrite(panR, 0);
+        Serial.println("Left");
+
+    }
+
+    if(command == 108){   //l=108, right = 39
+        digitalWrite(panR, 0);
+        digitalWrite(panL, 1);      
+        delay(50);
+        digitalWrite(panL, 0);
+        Serial.println("Right");
+        
+    }
+
+    while(command==107){ //K, down
+      digitalWrite(dirPin,HIGH);
+      Serial.println("pan clockwise");
+      digitalWrite(stepPin,HIGH); 
+      digitalWrite(stepPin,LOW); 
+
+      if (Serial.available() > 0){     //if there is another value to read exit this loop
+        command = Serial.read();
+        break;
+      }
+    }
+    
+    while(command==105){ //I, up
+      digitalWrite(dirPin,LOW);
+      Serial.println("pan clockwise");
+      digitalWrite(stepPin,HIGH); 
+      digitalWrite(stepPin,LOW); 
+
+      if (Serial.available() > 0){     //if there is another value to read exit this loop
+        command = Serial.read();
+        break;
+      } 
+    }
+    
+
+  
+
+    if(command == 114){   //r
+        Serial.println("Reset");
+        digitalWrite(dirPin,LOW);
+        digitalWrite(panR, 0);
+        digitalWrite(panL, 0);
+    }
+
+  }
