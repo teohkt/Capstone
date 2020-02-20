@@ -1,88 +1,114 @@
-#define panR  3
-#define panL  4
+from tkinter import *
+import serial
 
-#define stepPin 7
-#define dirPin 6
+ser = serial.Serial('COM3',9600)
 
-int lastValue;
+class MyFrame(Frame):
+    def __init__(self, master):
+        Frame.__init__(self, master)
+        self.go = False
+        self.repeater = False
 
-int command;
-
-void setup() {
-  // put your setup code here, to run once:
-  pinMode(panR,OUTPUT); 
-  pinMode(panL,OUTPUT);
-
-  pinMode(stepPin,OUTPUT);
-  pinMode(dirPin,OUTPUT);
-  digitalWrite(dirPin,HIGH);
-  
-  Serial.begin(9600);
-
-  lastValue = 0;
-
-  //j = 106
-  //k = 107
-  //l=108
-  //i=105
-  
-}
-
-void loop() {
-
-
-    command = Serial.read();
-    
-    if(command == 106){   //j=106, left = 37
-        digitalWrite(panR, 1);
-        digitalWrite(panL, 0);
-        delay(50);
-        digitalWrite(panR, 0);
-        Serial.println("Left");
-
-    }
-
-    if(command == 108){   //l=108, right = 39
-        digitalWrite(panR, 0);
-        digitalWrite(panL, 1);      
-        delay(50);
-        digitalWrite(panL, 0);
-        Serial.println("Right");
+        self.bind('<j>', self.pressj)
+        self.bind('<KeyRelease-j>', self.makeChoicej)
         
-    }
+        self.bind('<l>', self.pressl)
+        self.bind('<KeyRelease-l>', self.makeChoicel)
+        
+        self.bind('<i>', self.pressi)
+        self.bind('<KeyRelease-i>', self.makeChoicei)
+        
+        self.bind('<k>', self.pressk)
+        self.bind('<KeyRelease-k>', self.makeChoicek)
 
-    while(command==107){ //K, down
-      digitalWrite(dirPin,HIGH);
-      Serial.println("pan clockwise");
-      digitalWrite(stepPin,HIGH); 
-      digitalWrite(stepPin,LOW); 
+        self.pack(expand=YES, fill=BOTH)
+        self.focus_force()
 
-      if (Serial.available() > 0){     //if there is another value to read exit this loop
-        command = Serial.read();
-        break;
-      }
-    }
-    
-    while(command==105){ //I, up
-      digitalWrite(dirPin,LOW);
-      Serial.println("pan clockwise");
-      digitalWrite(stepPin,HIGH); 
-      digitalWrite(stepPin,LOW); 
+ # for keypress j
+    def pressj(self, event=None):
+        if self.go == False:
+            self.go = True
+            self.showJudgmentsA()
+        else: 
+            self.keepShowingj()
 
-      if (Serial.available() > 0){     //if there is another value to read exit this loop
-        command = Serial.read();
-        break;
-      } 
-    }
-    
+    def showJudgmentsA(self):
+        print("key-press started")
+        
+    def keepShowingj(self):
+        print('a key being pressed')
+        if self.repeater == False:
+            ser.write(str.encode('j'))
+            self.repeat = True
 
-  
+    def makeChoicej(self, event=None):
+        print("choice made")
+        self.go = False
+        self.repeater = False
+        ser.write(str.encode('J'))
 
-    if(command == 114){   //r
-        Serial.println("Reset");
-        digitalWrite(dirPin,LOW);
-        digitalWrite(panR, 0);
-        digitalWrite(panL, 0);
-    }
+#for keypress l
+    def pressl(self, event=None):
+        if self.go == False:
+            self.go = True
+            self.showJudgmentsA()
+        else: 
+            self.keepShowingl()
 
-  }
+    def keepShowingl(self):
+        print('a key being pressed')
+        if self.repeater == False:
+            ser.write(str.encode('l'))
+            self.repeat = True
+
+    def makeChoicel(self, event=None):
+        print("choice made")
+        self.go = False
+        self.repeater = False
+        ser.write(str.encode('L'))
+
+#for keypress i
+    def pressi(self, event=None):
+        if self.go == False:
+            self.go = True
+            self.showJudgmentsA()
+        else: 
+            self.keepShowingi()
+
+    def keepShowingi(self):
+        print('a key being pressed')
+        if self.repeater == False:
+            ser.write(str.encode('i'))
+            self.repeat = True
+
+    def makeChoicei(self, event=None):
+        print("choice made")
+        self.go = False
+        self.repeater = False
+        ser.write(str.encode('I'))
+
+#for keypress k
+    def pressk(self, event=None):
+        if self.go == False:
+            self.go = True
+            self.showJudgmentsA()
+        else: 
+            self.keepShowingk()
+
+    def keepShowingk(self):
+        print('a key being pressed')
+        if self.repeater == False:
+            ser.write(str.encode('k'))
+            self.repeat = True
+
+    def makeChoicek(self, event=None):
+        print("choice made")
+        self.go = False
+        self.repeater = False
+        ser.write(str.encode('K'))
+
+
+mainw = Tk()
+mainw.f = MyFrame(mainw)
+mainw.f.grid()
+mainw.mainloop()
