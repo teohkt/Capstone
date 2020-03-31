@@ -19,9 +19,10 @@ class colorTracking:
     def Tracking(frameOrig, overlay):
         
         detect = None
-        frameOrig = frameOrig
+
+        frameOrig = imutils.resize(frameOrig, height=600)
         
-        frame = imutils.resize(frameOrig, width = 600)
+        frame = imutils.resize(frameOrig, height = 600)
         blurred = cv2.GaussianBlur(frame, (11,11),0)
         hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
 
@@ -53,13 +54,13 @@ class colorTracking:
         #update points in queue
         pts.appendleft(center)
 
-        #loop over set of points in queue
+        #loop over set of points in queue for tail
         for i in range(1, len(pts)):
             if pts[i-1] is None or pts[i] is None:
                 continue
 
             thickness = int(np.sqrt(64/float(i+1))*2.5)
-            cv2.line(frame, pts[i-1], pts[i], (0,0,255), thickness)
+            #cv2.line(frame, pts[i-1], pts[i], (0,0,255), thickness)
 
         if overlay == True:
             return(frame, center, detect)
